@@ -1,0 +1,240 @@
+
+import java.util.Scanner;
+import java.io.File;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+public class Assignment
+{
+	public Long content;
+	
+	public static Long count=0L;
+	public String[] stringArr;
+	public String path;
+	public String ft; 
+	
+	public static void main(String as[])
+	{
+		Assignment call=new Assignment();
+		call.getData();
+		System.out.println("\n"+"Total number of Words Formatted: "+count);	
+	}
+	public void getData()
+	{
+		Scanner sc=new Scanner(System.in);
+		
+		System.out.println("\n"+"Enter file path: "); 
+		path=sc.nextLine(); // file path
+		path = path.replace("\\", "/"); 
+		
+		System.out.println("\n"+"Enter the format: ");
+		ft=sc.nextLine();
+		String fmt=ft.toLowerCase();	
+		
+		try
+		{
+			File file=new File(path);
+			Scanner files = new Scanner(file);        
+        	
+			Set<String> data = new HashSet<String>();  // No Duplicate Allowed
+			
+			while(files.hasNext())
+			{
+				data.add(files.next().toLowerCase());
+			}
+			List<String> list=new ArrayList<String>(data);
+			
+			stringArr = list.toArray(new String[]{}); //String array
+			
+			content=format(path,stringArr,fmt); //
+			
+			System.out.println("\n"+path);
+		}
+		catch(FileNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	Long format(String filePath, String[] wordsToFormat,String format)
+	{
+		toFilePath(filePath); // formate the file path
+				
+		String tCase="titlecase";
+		String uCase="uppercase";
+		String lCase="lowercase";
+		
+		if(format.equals(tCase))
+		{
+			checkCases(tCase,wordsToFormat);
+		}
+		else if(format.equals(uCase))
+		{
+			checkCases(uCase,wordsToFormat);
+		}
+		else if(format.equals(lCase))
+		{
+			checkCases(lCase,wordsToFormat);
+		}
+		else
+		{
+			System.out.println("Please Enter the Case as TitleCase Or UpperCase Or LowerCase");
+		}
+		return count; // return number of string formatted
+	}
+	
+	public static void checkCases(String str, String[] words)
+	{
+		if(str.equals("titlecase"))
+		{
+			for( String element : words) 
+			{
+				toTitleCase(element); // print the no of formatted elements 
+			}
+		}
+		else if(str.equals("lowercase"))
+		{
+			for(String element: words)
+			{
+				toLowerCase(element);
+			}
+		}
+		else if(str.equals("uppercase"))
+		{
+			for(String element: words)
+			{
+				toUpperCase(element);
+			}
+		}
+		else
+		{
+			System.out.println("Please Enter Format as Given");
+		}
+	}
+	
+	public static String toFilePath(String str)
+	{
+		if(str==null || str.isEmpty())
+		{
+			return "";
+		}
+		else if(str.length()==1)
+		{
+			return str.toUpperCase();
+		}
+		String[] parts1=str.split(" ");
+		
+		StringBuilder sb = new StringBuilder(str.length());
+		
+		for(String part : parts1)
+		{
+            if(part.length() > 1 )                
+			{   
+				sb.append(part.substring(0, 1).toUpperCase()).append( part.substring(1).toLowerCase() ); 
+			}               
+            else
+			{
+                sb.append(part.toLowerCase());
+            }
+            sb.append(" ");
+        }
+        return sb.toString().trim();
+	}
+	
+	public static String toTitleCase(String str) 
+	{    
+        if(str == null || str.isEmpty())
+        {
+			return "";
+		}   
+        if(str.length() == 1)
+		{
+			count++;
+			System.out.print(str.toString().toUpperCase());
+		}
+        String[] parts = str.split(" ");
+        
+        StringBuilder sb = new StringBuilder(str.length());
+        
+        for(String part : parts)
+		{
+            if(part.length() > 1 )                
+			{   
+				sb.append(part.substring(0, 1).toUpperCase()).append(part.substring(1).toLowerCase() ); 
+				count++;
+			}               
+            else
+			{
+                sb.append(part.toUpperCase());
+				//count++;
+            }
+            sb.append(" ");
+			
+			System.out.println(sb);
+        }
+        return sb.toString().trim();	
+    }
+	
+	public static String toUpperCase(String str)
+	{
+		if(str == null || str.isEmpty())
+        {
+			return "";
+		}   
+        if(str.length() == 1)
+		{
+			count++;
+			System.out.print(str.toString().toUpperCase());
+		}
+		
+		String[] parts = str.split(" ");
+        
+        StringBuilder sb = new StringBuilder(str.length());
+		
+		for(String part : parts)
+		{
+            if(part.length() > 1 )                
+			{   
+				sb.append(part.substring(0, 1).toUpperCase()).append(part.substring(1).toUpperCase() ); 
+				count++;
+			}  
+			System.out.println(sb);			
+        }
+		return sb.toString().trim();
+	}
+	
+	public static String toLowerCase(String str)
+	{
+		if(str == null || str.isEmpty())
+        {
+			return "";
+		}   
+        if(str.length() == 1)
+		{
+			count++;
+			System.out.print(str.toString());
+		}
+		String[] parts = str.split(" ");
+        
+        StringBuilder sb = new StringBuilder(str.length());
+		
+		for(String part : parts)
+		{
+            if(part.length() > 1 )                
+			{   
+				sb.append(part.substring(0, 1).toLowerCase()).append(part.substring(1).toLowerCase()); 
+				count++;
+			}  
+			System.out.println(sb);				
+        }
+		return sb.toString().trim();
+	}
+}
