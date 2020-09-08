@@ -1,0 +1,118 @@
+
+
+import java.io.File;
+import java.util.Scanner;
+import java.util.Map;
+import java.util.LinkedHashMap;
+import java.io.FileNotFoundException;
+
+public class FolderStats
+{
+	public static Long size=0L;
+	public static Map<String,Long> countByType;
+	
+	public static int count=0; 
+	
+	public static void main(String as[])
+	{
+		fileData();
+	}
+	
+	public static void fileData() 
+	{
+		Scanner sc=new Scanner(System.in);
+		System.out.print("\n"+"Enter path: ");
+		
+		String path=sc.nextLine();
+		File file=new File(path);
+		
+		size = getFolderSize(file);
+		
+		System.out.print("Size of the file: "+size+ " bytes");
+		
+		System.out.println();
+		String[] list=file.list();
+		
+		FolderStats folderStats=new FolderStats();
+		
+		folderStats.calculateStatus(path);
+		
+		System.out.println("Total number of files ="+count);
+		
+		for(Map.Entry mp:countByType.entrySet())
+		{
+			System.out.println(mp.getKey()+" "+mp.getValue());
+		}
+		
+	}
+	FolderStats calculateStatus(String path)
+	{
+		FolderStats folderStats=new FolderStats();
+		folderStats.countByType=getFolderStats(path);
+		
+		return folderStats;		
+		
+	}
+	public static long getFolderSize(File folder) 
+	{
+		for(File file:folder.listFiles())
+		{
+			if(file.isFile())
+			{
+				size+=file.length();
+			}
+			else
+			{
+				size+=getFolderSize(file);
+			}
+		}
+		return size;
+	}
+	
+	Map getFolderStats(String path)
+	{	
+			Long txtFile=0L,pngFile=0L,docFile=0L, docxFile=0L;
+			
+			File f=new File(path);
+			String[] fname=f.list();
+			
+			try
+			{
+				for(int i=0;i<fname.length;i++)
+				{
+					if(fname[i].contains(".txt"))
+					{
+						txtFile = txtFile + 1;
+						count++;
+					}
+					else if(fname[i].contains(".docx"))
+					{
+						docxFile = docxFile + 1; 
+						count++;
+					}
+					else if(fname[i].contains(".doc"))
+					{
+						docFile = docFile + 1;
+						count++;
+					}
+					else if((fname[i]).contains(".png"))
+					{
+						pngFile=pngFile+1;
+						count++;
+					}
+				}
+			}
+			catch(Exception e)
+			{
+				System.out.println(e);
+			}
+			countByType=new LinkedHashMap(); 
+	
+			countByType.put("Number of .txt File   =",txtFile);
+			countByType.put("Number of .png File   =",pngFile);
+			countByType.put("Number of .doc File   =",docFile);
+			countByType.put("Number of .docx File  =",docxFile);
+			
+		return countByType;
+	}
+}
